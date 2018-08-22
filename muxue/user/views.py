@@ -84,7 +84,7 @@ def jihuo(request,nid):
 	else:
 		return HttpResponse("激活失败")
 		
-#find the password
+#找回密码
 class Find_password(View):
 		def get(self,request):
 			find_form = FindForm()
@@ -95,8 +95,8 @@ class Find_password(View):
 				find_form = FindForm(request.POST)
 				if find_form.is_valid():			
 					send_register_email(email,send_type="forget")
-					request.session["email"]  = email
-					return redirect("/user/reset/")
+					msg = "the validcode is has send your email"
+					return render(request,"user/forgetpwd.html",locals())
 				else:
 					msg = "captcha is error"
 					return render(request,"user/forgetpwd.html",locals())
@@ -106,23 +106,39 @@ class Find_password(View):
 			
 			
 			
-#reset password
+#重设密码
 def reset_password(request,nid):
-	if method == "GET":
-		return render(request,"user/password_reset.html")
-	if method == "POST":
-		password = request.POST["password"]
-		password2 = request.POST["passwprd2"]
-		if password != password:
-			msg = "Two passwords are inconsistent"
-			return render(request,"user/password_reset.html",locals())
-		else:
-			email = request.session.get["email"]
-			models.UserProFile.objects.filter(username = email).update(password = password2)
-			return HttpResponse("OK")
-			
-			
-def index(request):
-	usrname = request.session.get("usrname")
-	return render(request,"user/index.html",locals()) 	
+	if models.EmailVerifyRecord.objects.filter(code=nid):  #用来验证验证码是否正确
+		'''
+		通过验证码来取出邮箱
+		'''
+		xinxi = models.EmailVerifyRecord.objects.filter(code=nid)
+		for usr_email in xinxi:
+			user_email = usr_email.email
+		if request.method == "GET":
+			return render(request,"user/password_reset.html")
+		if request.method == "POST":
+			password = request.POST["password"]
+			password2 = request.POST["password2"]
+			if password != password:
+				msg = "Two passwords are inconsistent"
+				return render(request,"user/password_reset.html",locals())
+			else:
+				
+				password = make_password(password2)  #密码加密
+				models.UserProfile.objects.filter(username =user_email).update(password = password) #更新密码
+				return render(request,"user/login.html")
+	else:
+		return render(request,"user/forgetpwd.html",{"msg":"您的链接不正确"})
+
+
+#主页
+class Index(View):
+	def get(self,request):
+		return render(request,"user/index.html")
+	def post(self,request):
+		return render(request,"user/index.html")		
+
+
+	
 # Create your views here.
