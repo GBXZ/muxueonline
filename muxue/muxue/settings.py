@@ -136,8 +136,14 @@ USE_TZ = False #如果为True存储数据的时间为UTC，应该改为False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS=[os.path.join(BASE_DIR,"static"),
+	os.path.join(BASE_DIR,"/orgaization/static/"),
+	os.path.join(BASE_DIR,"/user/static/"),
 ]
-MEDIA_URL = '/user/media/'
+
+'''
+上传文件设置，url是路径，root是上传的存放点
+'''
+MEDIA_URL = '/media/'  
 MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 
 

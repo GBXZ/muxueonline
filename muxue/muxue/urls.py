@@ -27,6 +27,7 @@ urlpatterns = [
     path("login/",login,name = "login"), #指向这个函数，所以不用login()
     path("register/",TemplateView.as_view(template_name="register.html"),name="register"),
     path("user/",include("user.urls")),
+    path("organization/",include("organization.urls")),
     path("captcha/",include("captcha.urls")),
     re_path("active/(?P<nid>.{16})",jihuo),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
