@@ -5,6 +5,7 @@ from django.db import models
 
 class CityDict(models.Model):
 	name = models.CharField(max_length=20,verbose_name = u"城市")
+	pinyin_name = models.CharField(max_length=40,verbose_name = u"城市拼音",default = '')
 	decs = models.CharField(max_length=200,verbose_name = u"城市描述")
 	add_time = models.DateTimeField(default= datetime.now)
 	class Meta:
@@ -42,4 +43,6 @@ class Teacher(models.Model):
 	class Meta:
 		verbose_name = u"课程教师"
 		verbose_name_plural = verbose_name
+	def __str__(self):
+		return self.name
 # Create your models here.
