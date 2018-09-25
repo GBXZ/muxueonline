@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 	'xadmin', 
 	'crispy_forms', #配置xadmin必须使用
 	'captcha',
+	'pure_pagination',
 ]
 
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge' #captcha验证码类型换为数字加减乘除
@@ -130,6 +131,12 @@ USE_L10N = True
 
 USE_TZ = False #如果为True存储数据的时间为UTC，应该改为False
 
+#django-pure-pagination设置
+PAGINATION_SETTINGS = {
+	'PAGE_RANGE_DISPLAYED':3,
+	'MAGIN_PAGES_DISPLAYED':2,
+	'SHOW_FIRST_PAGE_WHEN_INVALID':True,
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

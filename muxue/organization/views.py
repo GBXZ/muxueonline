@@ -5,7 +5,7 @@ from django.shortcuts import render,HttpResponse
 from django.views.generic.base import View
 from .models import CourseOrg,CityDict
 from django.core.paginator import Paginator
-
+from pure_pagination import Paginator,EmptyPage,PageNotAnInteger #使用pure-pagination需要导入的模块
 
 class Org_list(View):
 	"""
@@ -20,12 +20,12 @@ class Org_list(View):
 			all_orgs = CourseOrg.objects.filter(city_id = int(city_id)).order_by('id')
 		#通过机构类别筛选出课程机构
 		org_category = request.GET.get('ct',"").strip('/')
-		print(org_category)
 		if org_category:
 			all_orgs = CourseOrg.objects.filter(category = org_category).order_by('id')	
 		#取出城市地址
 		orgs_total = len(all_orgs)
 		all_citys = CityDict.objects.all()
+		'''
 		paginator = Paginator(all_orgs,5)  #将取出数据每5条分为 一页
 		yeshu = paginator.page_range    #得到页码的一个range列表
 		if nid == "":
@@ -35,7 +35,14 @@ class Org_list(View):
 		xia = int(nid) + 1
 		if xia>paginator.num_pages:  
 			xia = paginator.num_pages
-		#选择城市显示当地的课程机构
+		'''
+		#使用pure-pagination进行分页
+		try:
+			page = request.GET.get('page',1)
+		except PageNotAnteger:
+			page = 1
+		p = Paginator(all_orgs,2,request=request)
+		orgs =  p.page(page)
 		return render(request,"organization/org-list.html",locals())
 #通过地市筛选出课程机构
 class Org_by_city(View):
