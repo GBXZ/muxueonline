@@ -30,4 +30,5 @@ urlpatterns = [
     path("organization/",include("organization.urls")),
     path("captcha/",include("captcha.urls")),
     re_path("active/(?P<nid>.{16})",jihuo),
+    path('operation/',include('operation.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
